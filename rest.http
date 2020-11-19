@@ -1,0 +1,15 @@
+## Home Route
+GET http://localhost:5000
+
+###
+## Get all sudokus
+GET http://localhost:5000/sudoku
+
+###
+## Get sudoku with ID: 07ocKPNZnlvA80peeVrp
+GET http://localhost:5000/sudoku/yD6sp0LVR6cthvA72KC6
+
+
+###
+## Error testing, should return "Not found" on 404
+GET http://localhost:5000/ooops
