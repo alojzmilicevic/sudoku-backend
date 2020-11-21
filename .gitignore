@@ -8,6 +8,7 @@ functions/serviceAccountKey.json
 
 ### Firebase ###
 .idea
+.idea/fb-sudoku.iml
 **/node_modules/*
 **/.firebaserc
 
