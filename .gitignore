@@ -4,6 +4,7 @@
 
 ### personal
 rest.http
+functions/serviceAccountKey.json
 
 ### Firebase ###
 .idea
