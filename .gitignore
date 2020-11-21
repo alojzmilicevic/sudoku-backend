@@ -5,7 +5,7 @@
 ### personal
 rest.http
 functions/serviceAccountKey.json
-
+*.log
 ### Firebase ###
 .idea
 .idea/fb-sudoku.iml

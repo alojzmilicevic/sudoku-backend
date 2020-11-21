@@ -19,13 +19,13 @@
     "csurf": "^1.11.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
-    "firebase": "^7.14.6",
-    "firebase-admin": "^8.10.0",
-    "firebase-functions": "^3.6.1"
+    "firebase": "^7.24.0",
+    "firebase-admin": "^9.4.1",
+    "firebase-functions": "^3.11.0"
   },
   "devDependencies": {
     "csrf": "^3.1.0",
-    "firebase-functions-test": "^0.2.0"
+    "firebase-functions-test": "^0.2.3"
   },
   "private": true
 }
