@@ -1,10 +1,8 @@
-const express = require('express');
-const admin = require('firebase-admin');
-let router = express.Router();
-module.exports = router;
+const router = require('express').Router();
+const firebase = require('firebase');
+const { validateLoginData } = require('../utils/validators');
 
-const db = admin.firestore();
-const mainRoute = 'login';
+module.exports = router;
 
 router.route('/')
   /**
@@ -13,10 +11,26 @@ router.route('/')
    * # POST /login
    */
   .post((req, res) => {
-    const { email, password } = req.body;
-    console.log(" == = == == = :::: CREDENTIALS :::: == = == = == == = ");
-    console.log(email, password)
+    console.log(' == = == == = :::: LOGIN :::: == = == = == == = ');
+    const user = {
+      email: req.body.email,
+      password: req.body.password,
+    };
 
-    setTimeout(() => res.send("Logged in"), 2000);
-  })
+    const { valid, errors } = validateLoginData(user);
 
+    if (!valid) res.status(400).json({ errors });
+
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(user.email, user.password)
+      .then((data) => data.user.getIdToken())
+      .then((token) => res.json({ token }))
+      .catch((e) => {
+        console.error(e);
+        if (e.code === 'auth/wrong-password') {
+          return res.status(403).json({ general: 'Wrong credentials, please try again' });
+        }
+        return res.status(500).json({ error: e });
+      });
+  });

@@ -1,6 +1,7 @@
-const express = require('express');
+const router = require('express')
+  .Router();
 const admin = require('firebase-admin');
-let router = express.Router();
+
 module.exports = router;
 
 const db = admin.firestore();
@@ -13,26 +14,25 @@ router.route('/')
    * # GET /sudoku
    */
   .get((req, res) => {
-    let found = false;
-    db.collection(mainRoute).get()
-      .then(snapshot => {
-        const totalDocs = snapshot.docs.length;
+    console.log('=========== GET SUDOKU ============');
+    db.collection(mainRoute)
+      .get()
+      .then((snapshot) => {
+        const docs = snapshot.docs;
+        const totalDocs = docs.length;
+        let doc;
+
         if (totalDocs > 0) {
-          snapshot.docs.forEach((doc) => {
-            //const date = doc.data().date.toDate().toDateString();
-            //if (date === new Date().toDateString()) {
-              found = true;
-              res.send(doc.data())
-            //}
-          });
+          doc = docs[0];
+          return res.send(doc.data());
         }
-        if (!found || totalDocs === 0) {
-          res.sendStatus(404);
-        }
+
+        res.status(404).json({ error: 'No Sudoku found for this date' });
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
-      })
+        res.status(404).json({ error: err });
+      });
   })
   /**
    * Create a new Sudoku
@@ -40,10 +40,9 @@ router.route('/')
    * # POST /sudoku
    */
   .post((req, res) => {
-    console.log(req.headers)
-    return;
-    //TODO: Require authentication to do this request
-    //TODO error handling
+    console.log('=========== POST SUDOKU ============');
+    // TODO: Require authentication to do this request
+    // TODO error handling
 
     const easyData = {};
     const mediumData = {};
@@ -55,7 +54,7 @@ router.route('/')
     for (let i = 0; i < 9; i++) {
       const row = [];
       for (let j = 0; j < 9; j++) {
-        row.push(parseInt(easy[j + (9 * i)]))
+        row.push(parseInt(easy[j + (9 * i)], 10));
       }
       easyData[i] = row;
     }
@@ -63,7 +62,7 @@ router.route('/')
     for (let i = 0; i < 9; i++) {
       const row = [];
       for (let j = 0; j < 9; j++) {
-        row.push(parseInt(medium[j + (9 * i)]))
+        row.push(parseInt(medium[j + (9 * i)], 10));
       }
       mediumData[i] = row;
     }
@@ -71,11 +70,10 @@ router.route('/')
     for (let i = 0; i < 9; i++) {
       const row = [];
       for (let j = 0; j < 9; j++) {
-        row.push(parseInt(hard[j + (9 * i)]))
+        row.push(parseInt(hard[j + (9 * i)], 10));
       }
       hardData[i] = row;
     }
-
 
     const newSudoku = {
       metadata: {},
@@ -89,18 +87,19 @@ router.route('/')
       createdAt: Date.now(),
       updatedAt: Date.now(),
       name: 'The third',
-    }
+    };
 
     db.collection('sudoku')
       .add(newSudoku)
       .then((doc) => {
         res.json({ message: `document ${doc.id} created successfully NEW` });
       })
-      .catch(err => {
-        res.status(500).json({ error: 'something went wrong' });
+      .catch((err) => {
+        res.status(500)
+          .json({ error: 'something went wrong' });
         console.error(err);
-      })
-  })
+      });
+  });
 
 router.route('/:sudokuId')
   /**
@@ -109,6 +108,5 @@ router.route('/:sudokuId')
    * # DELETE
    */
   .delete((req, res) => {
-    res.send("hi delete /sudoku/" + req.params.sudokuId)
-  })
-
+    res.send(`hi delete /sudoku/${req.params.sudokuId}`);
+  });
