@@ -1,6 +1,6 @@
 const firebase = require('firebase');
 const { successResponse, errorResponse } = require('../responseHelpers/responses');
-const { ResponseCodes } = require('../responseHelpers/responseCodes');
+const { ResponseCodes } = require('../responseHelpers/constants/responseCodes');
 const { validateLoginData } = require('../validators/authValidator');
 
 /**

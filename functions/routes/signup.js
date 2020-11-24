@@ -2,7 +2,7 @@ const firebase = require('firebase');
 
 const config = require('../utils/config');
 const { successResponse, errorResponse } = require('../responseHelpers/responses');
-const { ResponseCodes } = require('../responseHelpers/responseCodes');
+const { ResponseCodes } = require('../responseHelpers/constants/responseCodes');
 
 firebase.initializeApp(config);
 

@@ -28,4 +28,4 @@ app.get(Routes.SUDOKU, getTodaysSudoku);
 // Login routes
 app.post(Routes.LOGIN, login);
 
-exports.api = functions.https.onRequest(app);
+exports.api = functions.region('europe-west1').https.onRequest(app);

@@ -9,7 +9,7 @@
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "8"
+    "node": "12"
   },
   "dependencies": {
     "axios": "^0.21.0",
@@ -29,5 +29,6 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "firebase-functions-test": "^0.2.3"
   },
+
   "private": true
 }

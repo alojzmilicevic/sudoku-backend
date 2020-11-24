@@ -1,5 +1,5 @@
-const { ResponseCodes } = require('../responseHelpers/responseCodes');
-const { ErrorCodes } = require('../responseHelpers/errorCodes');
+const { ResponseCodes } = require('../responseHelpers/constants/responseCodes');
+const { ErrorCodes } = require('../responseHelpers/constants/errorCodes');
 
 const { objSize } = require('../utils/util');
 

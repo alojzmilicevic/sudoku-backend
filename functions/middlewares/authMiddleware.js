@@ -1,4 +1,4 @@
-const { ResponseCodes } = require('../responseHelpers/responseCodes');
+const { ResponseCodes } = require('../responseHelpers/constants/responseCodes');
 const { errorResponse } = require('../responseHelpers/responses');
 const { admin, db } = require('../admin/admin');
 

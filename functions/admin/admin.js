@@ -3,7 +3,7 @@ const serviceAccount = require('./serviceAccountKey.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'http://localhost:4000/firestore',
+  databaseURL: 'https://alojz-sudoku-firebase-project.firebaseio.com',
 });
 
 const db = admin.firestore();

@@ -1,5 +1,5 @@
 const Routes = require('./routes');
-const { ResponseCodes } = require('../responseHelpers/responseCodes');
+const { ResponseCodes } = require('../responseHelpers/constants/responseCodes');
 const { successResponse, errorResponse } = require('../responseHelpers/responses');
 const { stringToBoard } = require('../utils/util');
 const { validateNewSudokus, batchDeleteValidation, batchDeleteErrors } = require('../validators/sudokuValidator');

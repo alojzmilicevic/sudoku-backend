@@ -1,6 +1,6 @@
-const { SuccessCodes } = require('./succesCodes');
-const { ResponseCodes } = require('./responseCodes');
-const { ErrorCodes } = require('./errorCodes');
+const { SuccessCodes } = require('./constants/succesCodes');
+const { ResponseCodes } = require('./constants/responseCodes');
+const { ErrorCodes } = require('./constants/errorCodes');
 
 exports.successResponse = (
   res, { token, code = ResponseCodes.GENERAL_SUCCESS } = {},
@@ -9,6 +9,7 @@ exports.successResponse = (
   if (token) {
     responseData.token = token;
   }
+  console.log(responseData);
 
   return res.json(responseData);
 };
