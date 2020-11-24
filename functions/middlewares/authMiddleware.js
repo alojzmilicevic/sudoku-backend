@@ -1,4 +1,6 @@
-const { admin, db } = require('../utils/admin');
+const { ResponseCodes } = require('../responseHelpers/responseCodes');
+const { errorResponse } = require('../responseHelpers/responses');
+const { admin, db } = require('../admin/admin');
 
 function authMiddleware(req, res, next) {
   const { authorization } = req.headers;
@@ -7,9 +9,7 @@ function authMiddleware(req, res, next) {
   if (authorization && authorization.startsWith('Bearer ')) {
     idToken = authorization.split('Bearer ')[1];
   } else {
-    console.error('No token found');
-    return res.status(403)
-      .json({ error: 'Unauthorized' });
+    return errorResponse(res, { code: ResponseCodes.INVALID_TOKEN });
   }
 
   admin.auth()
@@ -25,11 +25,7 @@ function authMiddleware(req, res, next) {
       req.user.handle = data.docs[0].data().handle;
       return next();
     })
-    .catch((e) => {
-      console.error('Error while verifying token', e);
-      return res.status(403)
-        .json({ error: e });
-    });
+    .catch(() => errorResponse(res, { code: ResponseCodes.UNAUTHORIZED }));
 }
 
 module.exports = authMiddleware;

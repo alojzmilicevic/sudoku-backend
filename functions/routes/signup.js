@@ -1,50 +1,43 @@
-const router = require('express').Router();
 const firebase = require('firebase');
 
 const config = require('../utils/config');
+const { successResponse, errorResponse } = require('../responseHelpers/responses');
+const { ResponseCodes } = require('../responseHelpers/responseCodes');
 
 firebase.initializeApp(config);
 
-const { validateSignupData } = require('../utils/validators');
+const { validateSignupData } = require('../validators/authValidator');
 
-const { db } = require('../utils/admin');
+const { db } = require('../admin/admin');
 
-module.exports = router;
-
-// TODO testa att detta är exports...
-router.route('/')
-  /**
-   * Login
+/**
    *
    * # POST /signup
    */
-  .post((req, res) => {
-    console.log(' == = == == = :::: SIGNUP :::: == = == = == == = ');
-    console.log(db);
-    const newUser = {
-      email: req.body.email,
-      password: req.body.password,
-      handle: req.body.handle,
-    };
+exports.signup = (req, res) => {
+  console.log(' == = == == = :::: SIGNUP :::: == = == = == == = ');
+  const newUser = {
+    email: req.body.email,
+    password: req.body.password,
+    handle: req.body.handle,
+  };
 
-    let token,
-      userId;
+  let token, userId;
 
-    const { valid, errors } = validateSignupData(newUser);
+  const { valid, errors } = validateSignupData(newUser);
 
-    if (!valid) return res.status(400).json({ errors });
+  if (!valid) {
+    return errorResponse(res, { errors });
+  }
 
-    db.doc(`/users/${newUser.handle}`)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          return res.status(400)
-            .json({ handle: 'this handle is already taken' });
-        }
-        return firebase
-          .auth()
-          .createUserWithEmailAndPassword(newUser.email, newUser.password);
-      })
+  const docRef = `/users/${newUser.handle}`;
+
+  db.doc(docRef).get().then((doc) => {
+    if (doc.exists) {
+      return errorResponse(res, { code: ResponseCodes.HANDLE_TAKEN });
+    }
+    return firebase.auth()
+      .createUserWithEmailAndPassword(newUser.email, newUser.password)
       .then((data) => {
         userId = data.user.uid;
         return data.user.getIdToken();
@@ -58,18 +51,15 @@ router.route('/')
           userId,
         };
 
-        return db.doc(`/users/${newUser.handle}`)
-          .set(userCredentials);
+        return db.doc(docRef).set(userCredentials);
       })
-      .then(() => res.status(201)
-        .json({ token }))
+      .then(() => successResponse(res,
+        { code: ResponseCodes.SIGN_UP_SUCCESS, token }))
       .catch((e) => {
-        console.error(e);
         if (e.code === 'auth/email-already-in-use') {
-          return res.status(400)
-            .json({ email: 'Email is already in use' });
+          return errorResponse(res, { code: ResponseCodes.EMAIL_TAKEN });
         }
-        res.status(500)
-          .json({ error: e.code });
+        return errorResponse(res);
       });
   });
+};
